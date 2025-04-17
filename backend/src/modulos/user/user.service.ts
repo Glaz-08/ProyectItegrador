@@ -3,13 +3,18 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApiResponse } from 'src/interface/ApiResponse'; 
+import { HttpException,HttpStatus  } from '@nestjs/common';//colocar en todas las que tengan una API response
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm'; //para hacer consultas a la base de datos
+import { CreateResponse } from 'src/utils/api-response.util'; //para crear la respuesta de la API
 
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
 
   async dataUserByRut(rut: string): Promise<ApiResponse<User | null>> {
     const user = await this.userRepository.findOne({ where: { rut } });

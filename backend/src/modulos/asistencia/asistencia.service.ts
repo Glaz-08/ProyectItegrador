@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAsistenciaDto } from './dto/create-asistencia.dto';
 import { UpdateAsistenciaDto } from './dto/update-asistencia.dto';
-
+// este se trabaja la logica (creo usuarios etc)
+// este se encarga de la logica de negocio y de la comunicacion con la base de datos
 @Injectable()
 export class AsistenciaService {
   create(createAsistenciaDto: CreateAsistenciaDto) {
