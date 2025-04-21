@@ -3,11 +3,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApiResponse } from 'src/interface/ApiResponse'; 
-import { HttpException,HttpStatus  } from '@nestjs/common';//colocar en todas las que tengan una API response
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm'; //para hacer consultas a la base de datos
-import { CreateResponse } from 'src/utils/api-response.util'; //para crear la respuesta de la API
-
+import { Repository } from 'typeorm';
+import { CreateResponse } from 'src/utils/api-response.util';
 
 @Injectable()
 export class UserService {
@@ -15,6 +14,19 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
+
+  async create(createUserDto: CreateUserDto): Promise<ApiResponse<User>> {
+    try {
+      const newUser = this.userRepository.create(createUserDto);
+      const savedUser = await this.userRepository.save(newUser);
+      return CreateResponse('Usuario creado exitosamente', savedUser, 'CREATED');
+    } catch (error) {
+      throw new HttpException(
+        CreateResponse('Error al crear usuario', null, 'BAD_REQUEST', error.message),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 
   async dataUserByRut(rut: string): Promise<ApiResponse<User | null>> {
     const user = await this.userRepository.findOne({ where: { rut } });

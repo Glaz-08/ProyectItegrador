@@ -1,19 +1,22 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('users')
-export class User {
+@Entity('salas')
+export class Sala {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ unique: true })
-  rut: string;
+  codigo: string;
 
   @Column()
   nombre: string;
 
   @Column()
-  apellido: string;
+  capacidad: number;
+
+  @Column({ default: true })
+  disponible: boolean;
 
   @Column({ nullable: true })
-  email?: string;
+  descripcion?: string;
 }

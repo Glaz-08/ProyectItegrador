@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { getEnvValue } from './config/config';
-import { TypeOrmModule
-} from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './modulos/user/entities/user.entity';
+import { Sala } from './modulos/salas/entities/sala.entity';
+import { Asistencia } from './modulos/asistencia/entities/asistencia.entity';
+import { UserModule } from './modulos/user/user.module';
+import { SalasModule } from './modulos/salas/salas.module';
+import { AsistenciaModule } from './modulos/asistencia/asistencia.module';
 
 @Module({
   imports: [
@@ -15,9 +20,11 @@ import { TypeOrmModule
       password: getEnvValue('DATABASE_PASSWORD'),
       database: getEnvValue('DATABASE_NAME'),
       synchronize: true,
-      entities: [], 
+      entities: [User, Sala, Asistencia],
     }),
-
+    UserModule,
+    SalasModule,
+    AsistenciaModule,
   ],
   controllers: [],
   providers: [],
