@@ -19,7 +19,8 @@ import { AsistenciaModule } from './modulos/asistencia/asistencia.module';
       username: getEnvValue('DATABASE_USERNAME'),
       password: getEnvValue('DATABASE_PASSWORD'),
       database: getEnvValue('DATABASE_NAME'),
-      synchronize: true,
+      synchronize: true, // Mantén esto en true para sincronizar los cambios en el esquema
+      // Se eliminó dropSchema para evitar la pérdida de datos en el futuro
       entities: [User, Sala, Asistencia],
     }),
     UserModule,

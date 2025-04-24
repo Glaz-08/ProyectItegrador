@@ -5,18 +5,15 @@ export class Sala {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  codigo: string;
-
   @Column()
   nombre: string;
 
   @Column()
   capacidad: number;
 
-  @Column({ default: true })
+  @Column({ 
+    default: true,
+    comment: 'Indica si la sala está disponible (true) u ocupada (false)'
+  })
   disponible: boolean;
-
-  @Column({ nullable: true })
-  descripcion?: string;
 }

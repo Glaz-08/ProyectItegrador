@@ -113,4 +113,55 @@ export class SalasService {
       );
     }
   }
+
+  async cambiarEstado(id: number, estaDisponible: boolean): Promise<ApiResponse<Sala>> {
+    try {
+      const sala = await this.salaRepository.findOne({ where: { id } });
+      
+      if (!sala) {
+        throw new HttpException(
+          CreateResponse('Sala no encontrada', null, 'NOT_FOUND'),
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      
+      // Actualiza solo el campo disponible
+      await this.salaRepository.update(id, { disponible: estaDisponible });
+      
+      const updatedSala = await this.salaRepository.findOne({ where: { id } });
+      const mensaje = estaDisponible 
+        ? 'Sala marcada como disponible exitosamente' 
+        : 'Sala marcada como ocupada exitosamente';
+      
+      return CreateResponse(mensaje, updatedSala, 'OK');
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      
+      throw new HttpException(
+        CreateResponse('Error al cambiar estado de la sala', null, 'BAD_REQUEST', error.message),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+  
+  async findByEstado(disponible: boolean): Promise<ApiResponse<Sala[]>> {
+    try {
+      const salas = await this.salaRepository.find({ where: { disponible } });
+      
+      const mensaje = disponible 
+        ? 'Salas disponibles encontradas' 
+        : 'Salas ocupadas encontradas';
+        
+      if (salas.length === 0) {
+        return CreateResponse(`No hay salas ${disponible ? 'disponibles' : 'ocupadas'} registradas`, [], 'OK');
+      }
+      
+      return CreateResponse(mensaje, salas, 'OK');
+    } catch (error) {
+      throw new HttpException(
+        CreateResponse(`Error al buscar salas ${disponible ? 'disponibles' : 'ocupadas'}`, null, 'BAD_REQUEST', error.message),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

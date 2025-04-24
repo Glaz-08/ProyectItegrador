@@ -31,4 +31,24 @@ export class SalasController {
   remove(@Param('id') id: string) {
     return this.salasService.remove(+id);
   }
+  
+  @Patch('marcar-disponible/:id')
+  marcarDisponible(@Param('id') id: string) {
+    return this.salasService.cambiarEstado(+id, true);
+  }
+
+  @Patch('marcar-ocupada/:id')
+  marcarOcupada(@Param('id') id: string) {
+    return this.salasService.cambiarEstado(+id, false);
+  }
+
+  @Get('disponibles')
+  findDisponibles() {
+    return this.salasService.findByEstado(true);
+  }
+
+  @Get('ocupadas')
+  findOcupadas() {
+    return this.salasService.findByEstado(false);
+  }
 }

@@ -3,10 +3,6 @@ import { IsString, IsNotEmpty, IsNumber, IsOptional, IsBoolean } from 'class-val
 export class CreateSalaDto {
   @IsString()
   @IsNotEmpty()
-  codigo: string;
-
-  @IsString()
-  @IsNotEmpty()
   nombre: string;
 
   @IsNumber()
@@ -16,8 +12,4 @@ export class CreateSalaDto {
   @IsBoolean()
   @IsOptional()
   disponible?: boolean;
-
-  @IsString()
-  @IsOptional()
-  descripcion?: string;
 }
