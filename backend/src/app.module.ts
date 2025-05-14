@@ -8,6 +8,7 @@ import { Asistencia } from './modulos/asistencia/entities/asistencia.entity';
 import { UserModule } from './modulos/user/user.module';
 import { SalasModule } from './modulos/salas/salas.module';
 import { AsistenciaModule } from './modulos/asistencia/asistencia.module';
+import { AuthModule } from './modulos/auth/auth.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AsistenciaModule } from './modulos/asistencia/asistencia.module';
     UserModule,
     SalasModule,
     AsistenciaModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

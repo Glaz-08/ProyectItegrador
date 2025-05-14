@@ -36,12 +36,18 @@ get http:localhost:3000/user/obtener-usuarios/202121837 (ete ejemplo busca un us
 
 ## API REST Endpoints (Documentación completa)
 
+### Módulo de Autenticación
+- **POST** `/auth/register` - Registrar un nuevo usuario y obtener token JWT
+- **POST** `/auth/login` - Iniciar sesión y obtener token JWT
+
 ### Módulo de Usuarios
 - **POST** `/user/crear_usuario` - Crear un nuevo usuario
 - **GET** `/user/obtener-usuarios` - Obtener todos los usuarios
 - **GET** `/user/obtener-usuarios/:rut` - Buscar un usuario por rut
 - **PATCH** `/user/:id` - Actualizar un usuario
 - **DELETE** `/user/:id` - Eliminar un usuario
+- **GET** `/user/sala/disponibilidad/:salaId` - Verificar disponibilidad de una sala
+- **POST** `/user/sala/reservar/:salaId/usuario/:userId` - Reservar una sala para un usuario
 
 ### Módulo de Salas
 - **POST** `/salas/crear_sala` - Crear una nueva sala
@@ -62,3 +68,87 @@ get http:localhost:3000/user/obtener-usuarios/202121837 (ete ejemplo busca un us
 - **DELETE** `/asistencia/eliminar/:id` - Eliminar una asistencia
 - **GET** `/asistencia/por-usuario/:userId` - Obtener asistencias de un usuario específico
 - **GET** `/asistencia/por-sala/:salaId` - Obtener asistencias de una sala específica
+
+## Autenticación JWT
+
+La aplicación implementa autenticación usando JSON Web Tokens (JWT) con una duración de 24 horas.
+
+### Flujo de Autenticación
+
+1. **Registro de Usuario**:
+   ```http
+   POST /auth/register
+   {
+     "rut": "123456789",
+     "nombre": "Nombre",
+     "apellido": "Apellido",
+     "email": "usuario@ejemplo.com",
+     "password": "contraseña"
+   }
+   ```
+   Respuesta:
+   ```json
+   {
+     "statusCode": 201,
+     "message": "Usuario registrado exitosamente",
+     "data": {
+       "user": {
+         "id": 1,
+         "rut": "123456789",
+         "nombre": "Nombre",
+         "apellido": "Apellido",
+         "email": "usuario@ejemplo.com"
+       },
+       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+     },
+     "success": true
+   }
+   ```
+
+2. **Inicio de Sesión**:
+   ```http
+   POST /auth/login
+   {
+     "rut": "123456789",
+     "password": "contraseña"
+   }
+   ```
+   Respuesta:
+   ```json
+   {
+     "statusCode": 200,
+     "message": "Inicio de sesión exitoso",
+     "data": {
+       "user": {
+         "id": 1,
+         "rut": "123456789",
+         "nombre": "Nombre",
+         "apellido": "Apellido",
+         "email": "usuario@ejemplo.com"
+       },
+       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+     },
+     "success": true
+   }
+   ```
+
+### Endpoints Protegidos
+
+Los siguientes endpoints requieren autenticación JWT:
+
+- **PATCH** `/user/:id` - Actualizar un usuario
+- **DELETE** `/user/:id` - Eliminar un usuario
+- **POST** `/user/sala/reservar/:salaId` - Reservar una sala
+
+Para acceder a estos endpoints protegidos, incluya el token JWT en el encabezado de autorización:
+
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### Características de Seguridad
+
+- Tokens JWT con expiración de 24 horas
+- Contraseñas encriptadas con bcrypt
+- Validación de usuarios al acceder a recursos protegidos
+- Respuestas estandarizadas con formato ApiResponse
